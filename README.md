@@ -10,3 +10,10 @@ Then:
 
     cd examples/getLastDumpDateEx
     sbt run
+
+Or:
+
+    cd examples/sendRequest
+    cp /PATH/TO/YOUR/provider.pem src/main/resources
+    vi src/main/resources/application.conf
+    sbt run

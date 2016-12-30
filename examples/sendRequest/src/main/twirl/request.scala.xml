@@ -1,0 +1,15 @@
+@(requestTime: DateTime, operatorName: String, inn: String, ogrn: String, email: String)
+
+@formatDateTime(dateTime: DateTime) = @{
+  val isoFormat = ISODateTimeFormat.dateTime()
+  dateTime.toString(isoFormat)
+}
+
+<?xml version="1.0" encoding="windows-1251"?>
+<request>
+    <requestTime>@formatDateTime(requestTime)</requestTime>
+    <operatorName>@operatorName</operatorName>
+    <inn>@inn</inn>
+    <ogrn>@ogrn</ogrn>
+    <email>@email</email>
+</request>
