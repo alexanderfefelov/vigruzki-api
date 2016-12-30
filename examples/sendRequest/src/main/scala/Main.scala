@@ -29,6 +29,7 @@ object Main extends App {
       val inn = conf.getString("provider.inn")
       val ogrn = conf.getString("provider.ogrn")
       val email = conf.getString("provider.email")
+      val dumpFormatVersion = conf.getString("register.dumpFormatVersion")
 
       val data = xml.request(DateTime.now, operatorName, inn, ogrn, email).body.lines.filter(_.nonEmpty).mkString("\n")
       val dataBytes = data.getBytes("windows-1251").toVector
@@ -39,7 +40,7 @@ object Main extends App {
       val signatureBytes = signature.getBytes.toVector
 
       val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
-      val responseFuture = service.sendRequest(new Base64Binary(dataBytes), new Base64Binary(signatureBytes), Some("2.2"))
+      val responseFuture = service.sendRequest(new Base64Binary(dataBytes), new Base64Binary(signatureBytes), Some(dumpFormatVersion))
       responseFuture.onSuccess {
         case response =>
           println(s"${new Date()}")
