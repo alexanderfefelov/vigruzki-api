@@ -17,3 +17,8 @@ Or:
     cp /PATH/TO/YOUR/provider.pem src/main/resources
     vi src/main/resources/application.conf
     sbt run
+
+Or:
+
+    cd examples/getResult
+    sbt "run REQUEST_CODE"
