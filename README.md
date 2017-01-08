@@ -27,3 +27,8 @@ Or:
 
     cd examples/verifyZip
     sbt "run PATH_TO_YOUR_REGISTER_ZIP"
+
+Or:
+
+    cd examples/basicXmlStat
+    sbt "run PATH_TO_YOUR_DUMP_XML"
