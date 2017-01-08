@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://rsoc.ru" targetNamespace="http://rsoc.ru">
+    <xsd:element name="register" type="tns:RegisterType"/>
+    <xsd:complexType name="RegisterType">
+        <xsd:sequence>
+            <xsd:element name="content" type="tns:ContentType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>Реестровая запись</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="updateTime" type="xsd:dateTime" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Дата и время формирования выгрузки</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="updateTimeUrgently" type="xsd:dateTime">
+            <xsd:annotation>
+                <xsd:documentation>Дата и время последнего внесения изменений, требующих незамедлительного
+                    реагирования
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="formatVersion" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Версия формата, в котором сформирована выгрузка.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="ContentType">
+        <xsd:sequence>
+            <xsd:element name="decision" type="tns:DecisionType">
+                <xsd:annotation>
+                    <xsd:documentation>Решение уполномоченного органа</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="url" minOccurs="0" maxOccurs="unbounded" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>Указатель страницы сайта</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="domain" minOccurs="0" maxOccurs="unbounded" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>Доменное имя</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ip" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>Сетевой адрес</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ipSubnet" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>IP-подсеть</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Идентификатор записи в реестре</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="includeTime" type="xsd:dateTime" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Дата и время включения записи в реестр</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="urgencyType" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>тип срочности реагирования</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="entryType" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>код типа реестра</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="blockType" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>код типа блокировки реестровой записи</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="hash" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>хэш-код для реестровой записи (изменяется при любом изменении
+                    содержимого записи)
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="DecisionType">
+        <xsd:attribute name="number" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Номер решения</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="date" type="xsd:date" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Дата решения</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="org" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Кем принято решение</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>
