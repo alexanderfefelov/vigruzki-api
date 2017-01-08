@@ -22,3 +22,8 @@ Or:
 
     cd examples/getResult
     sbt "run REQUEST_CODE"
+
+Or:
+
+    cd examples/verifyZip
+    sbt "run PATH_TO_YOUR_REGISTER_ZIP"
