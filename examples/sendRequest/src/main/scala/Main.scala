@@ -11,7 +11,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openssl.PEMParser
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.bouncycastle.operator.jcajce.{JcaContentSignerBuilder, JcaDigestCalculatorProviderBuilder}
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, Days}
 import ru.gov.rkn.vigruzki.OperatorRequestPortBindings
 
 import scalaxb.{Base64Binary, DispatchHttpClientsAsync, Soap11ClientsAsync}
@@ -30,6 +30,14 @@ object Main extends App {
       val ogrn = conf.getString("provider.ogrn")
       val email = conf.getString("provider.email")
       val dumpFormatVersion = conf.getString("register.dumpFormatVersion")
+      val certificateWillExpire = conf.getInt("warnings.certificateWillExpire")
+
+      val expire = new DateTime(x509CertificateHolder.getNotAfter)
+      val now = DateTime.now()
+      val daysLeft = Days.daysBetween(now.toLocalDate, expire.toLocalDate).getDays
+      if (daysLeft < certificateWillExpire) {
+        println(s"Attention! Your certificate will expire at $expire, $daysLeft day(s) left")
+      }
 
       val data = xml.request(DateTime.now, operatorName, inn, ogrn, email).body.lines.filter(_.nonEmpty).mkString("\n")
       val dataBytes = data.getBytes("windows-1251").toVector
