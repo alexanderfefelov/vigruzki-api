@@ -1,7 +1,5 @@
 scalaVersion := "2.11.8"
 
-resolvers += Resolver.file("Local repo", file(System.getProperty("user.home") + "/.ivy2/local"))(Resolver.ivyStylePatterns)
-
 libraryDependencies ++= Seq(
   "org.bouncycastle" % "bcprov-jdk15on" % "1.56",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.56",
