@@ -26,9 +26,9 @@ Or:
 Or:
 
     cd examples/verifyZip
-    sbt "run PATH_TO_YOUR_REGISTER_ZIP"
+    sbt "run /PATH/TO/YOUR/register.zip"
 
 Or:
 
     cd examples/basicXmlStat
-    sbt "run PATH_TO_YOUR_DUMP_XML"
+    sbt "run /PATH/TO/YOUR/dump.xml"
