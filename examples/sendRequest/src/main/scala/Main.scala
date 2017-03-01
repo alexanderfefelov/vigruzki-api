@@ -2,6 +2,7 @@ import java.io.{BufferedReader, InputStreamReader}
 import java.security.Security
 import java.util.Date
 
+import better.files.File
 import com.typesafe.config.ConfigFactory
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
 import org.bouncycastle.cert.X509CertificateHolder
@@ -39,16 +40,18 @@ object Main extends App {
         println(s"Attention! Your certificate will expire at $expire, $daysLeft day(s) left")
       }
 
-      val data = xml.request(DateTime.now, operatorName, inn, ogrn, email).body.lines.filter(_.nonEmpty).mkString("\n")
-      val dataBytes = data.getBytes("windows-1251").toVector
+      val request = xml.request(DateTime.now, operatorName, inn, ogrn, email).body.lines.filter(_.nonEmpty).mkString("\n")
+      File("request.txt").write(request)
+      val requestBytes = request.getBytes("windows-1251").toVector
 
-      val signatureData = sign(privateKeyInfo, x509CertificateHolder, data.getBytes)
+      val signatureData = sign(privateKeyInfo, x509CertificateHolder, request.getBytes)
       val signatureData64 = new sun.misc.BASE64Encoder().encode(signatureData)
       val signature = s"-----BEGIN PKCS7-----\n$signatureData64\n-----END PKCS7-----"
+      File("request.txt.sig").write(signature)
       val signatureBytes = signature.getBytes.toVector
 
       val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
-      val responseFuture = service.sendRequest(new Base64Binary(dataBytes), new Base64Binary(signatureBytes), Some(dumpFormatVersion))
+      val responseFuture = service.sendRequest(new Base64Binary(requestBytes), new Base64Binary(signatureBytes), Some(dumpFormatVersion))
       responseFuture.onSuccess {
         case response =>
           println(s"${new Date()}")
