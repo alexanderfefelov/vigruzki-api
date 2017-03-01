@@ -44,16 +44,16 @@ object Main extends App {
       implicit val codec = Codec("windows-1251")
       val request = xml.request(DateTime.now, operatorName, inn, ogrn, email).body.lines.filter(_.nonEmpty).mkString("\n")
       File("request.txt").write(request)
-      val requestBytes = request.getBytes("windows-1251").toVector
+      val requestBytes = request.getBytes("windows-1251")
 
-      val signatureData = sign(privateKeyInfo, x509CertificateHolder, request.getBytes)
+      val signatureData = sign(privateKeyInfo, x509CertificateHolder, requestBytes)
       val signatureData64 = new sun.misc.BASE64Encoder().encode(signatureData)
       val signature = s"-----BEGIN PKCS7-----\n$signatureData64\n-----END PKCS7-----"
       File("request.txt.sig").write(signature)
-      val signatureBytes = signature.getBytes.toVector
+      val signatureBytes = signature.getBytes
 
       val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
-      val responseFuture = service.sendRequest(new Base64Binary(requestBytes), new Base64Binary(signatureBytes), Some(dumpFormatVersion))
+      val responseFuture = service.sendRequest(new Base64Binary(requestBytes.toVector), new Base64Binary(signatureBytes.toVector), Some(dumpFormatVersion))
       responseFuture.onSuccess {
         case response =>
           println(s"${new Date()}")
