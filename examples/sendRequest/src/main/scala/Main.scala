@@ -18,6 +18,7 @@ import ru.gov.rkn.vigruzki.OperatorRequestPortBindings
 import scalaxb.{Base64Binary, DispatchHttpClientsAsync, Soap11ClientsAsync}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.io.Codec
 
 object Main extends App {
 
@@ -40,6 +41,7 @@ object Main extends App {
         println(s"Attention! Your certificate will expire at $expire, $daysLeft day(s) left")
       }
 
+      implicit val codec = Codec("windows-1251")
       val request = xml.request(DateTime.now, operatorName, inn, ogrn, email).body.lines.filter(_.nonEmpty).mkString("\n")
       File("request.txt").write(request)
       val requestBytes = request.getBytes("windows-1251").toVector
