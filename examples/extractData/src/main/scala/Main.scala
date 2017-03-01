@@ -14,8 +14,8 @@ object Main extends App {
 
   val rawXml = XML.loadFile(dumpXml)
   val register = scalaxb.fromXML[RegisterType](rawXml)
-  File("unique-urls.txt").write(register.content.flatMap(_.url).distinct.mkString("\n"))
-  File("unique-domains.txt").write(register.content.flatMap(_.domain).filterNot(_.contains("*")).distinct.mkString("\n"))
+  File("urls-unique.txt").write(register.content.flatMap(_.url).distinct.mkString("\n"))
+  File("domains- unique.txt").write(register.content.flatMap(_.domain).filterNot(_.contains("*")).distinct.mkString("\n"))
   File("domain-masks-unique.txt").write(register.content.flatMap(_.domain).filter(_.contains("*")).distinct.mkString("\n"))
   File("ips-unique.txt").write(register.content.flatMap(_.ip).distinct.mkString("\n"))
   File("ip-subnets-unique.txt").write(register.content.flatMap(_.ipSubnet).distinct.mkString("\n"))
