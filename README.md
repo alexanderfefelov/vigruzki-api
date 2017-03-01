@@ -32,3 +32,8 @@ Or:
 
     cd examples/basicXmlStat
     sbt "run /PATH/TO/YOUR/dump.xml"
+
+Or:
+
+    cd examples/extractData
+    sbt "run /PATH/TO/YOUR/dump.xml"
