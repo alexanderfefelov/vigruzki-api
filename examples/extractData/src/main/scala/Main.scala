@@ -44,20 +44,21 @@ object Main extends App {
   File("domains-unique-total.txt").write(domainsUniqueTotal.mkString("\n"))
 
   implicit val actorSystem = ActorSystem()
-  def askWithRetry(actorRef: ActorRef, message: Any, timeout: Timeout, maxAttempts: Int, attempt: Int = 0): Any = {
+  def askWithRetry(actorRef: ActorRef, message: Any, timeout: Timeout, maxAttempts: Int, delay: Duration, attempt: Int = 0): Any = {
     try {
       val result = actorRef.ask(message)(timeout)
       Await.result(result, timeout.duration)
     } catch {
-      case e: Exception if attempt < maxAttempts=>
+      case e: Exception if attempt < maxAttempts =>
         System.err.println(s"Retrying $message")
-        askWithRetry(actorRef, message,timeout, maxAttempts, attempt + 1)
+        Thread.sleep(delay.length) // Very naive
+        askWithRetry(actorRef, message, timeout, maxAttempts, delay, attempt + 1)
     }
   }
   var errorCount = 0
   val dnsResolved = domainsUniqueTotal.par.map { domain =>
     try {
-      askWithRetry(IO(Dns), Dns.Resolve(domain), 5.seconds, 3).asInstanceOf[Dns.Resolved]
+      askWithRetry(IO(Dns), Dns.Resolve(domain), 5.seconds, 3, 3.seconds).asInstanceOf[Dns.Resolved]
     } catch {
       case e: Exception =>
         errorCount += 1
