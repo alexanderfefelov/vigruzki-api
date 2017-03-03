@@ -1,6 +1,6 @@
 import java.net.InetAddress
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import akka.io.{Dns, IO}
 import akka.pattern._
 import akka.util.Timeout
@@ -44,12 +44,20 @@ object Main extends App {
   File("domains-unique-total.txt").write(domainsUniqueTotal.mkString("\n"))
 
   implicit val actorSystem = ActorSystem()
-  implicit val timeout = Timeout(5.seconds)
+  def askWithRetry(actorRef: ActorRef, message: Any, timeout: Timeout, maxAttempts: Int, attempt: Int = 0): Any = {
+    try {
+      val result = actorRef.ask(message)(timeout)
+      Await.result(result, timeout.duration)
+    } catch {
+      case e: Exception if attempt < maxAttempts=>
+        System.err.println(s"Retrying $message")
+        askWithRetry(actorRef, message,timeout, maxAttempts, attempt + 1)
+    }
+  }
   var errorCount = 0
   val dnsResolved = domainsUniqueTotal.par.map { domain =>
     try {
-      val lookup = IO(Dns) ? Dns.Resolve(domain)
-      Await.result(lookup, 5.seconds).asInstanceOf[Dns.Resolved]
+      askWithRetry(IO(Dns), Dns.Resolve(domain), 5.seconds, 3).asInstanceOf[Dns.Resolved]
     } catch {
       case e: Exception =>
         errorCount += 1
