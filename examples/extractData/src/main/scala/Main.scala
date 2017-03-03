@@ -1,9 +1,17 @@
+import java.net.InetAddress
+
+import akka.actor.ActorSystem
+import akka.io.{Dns, IO}
+import akka.pattern._
+import akka.util.Timeout
 import better.files.File
 import com.netaporter.uri._
 import com.netaporter.uri.config.UriConfig
 import com.netaporter.uri.decoding.NoopDecoder
 import ru.gov.rkn.vigruzki._
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.xml._
 
 object Main extends App {
@@ -34,5 +42,26 @@ object Main extends App {
   File("ip-subnets-unique.txt").write(ipSubnetsUnique.mkString("\n"))
   File("domains-from-urls-unique.txt").write(domainsFromUrlsUnique.mkString("\n"))
   File("domains-unique-total.txt").write(domainsUniqueTotal.mkString("\n"))
+
+  implicit val actorSystem = ActorSystem()
+  implicit val timeout = Timeout(5.seconds)
+  var errorCount = 0
+  val dnsResolved = domainsUniqueTotal.par.map { domain =>
+    try {
+      val lookup = IO(Dns) ? Dns.Resolve(domain)
+      Await.result(lookup, 5.seconds).asInstanceOf[Dns.Resolved]
+    } catch {
+      case e: Exception =>
+        errorCount += 1
+        System.err.println(s"Error while resolving $domain: $e")
+        Dns.Resolved(domain, Seq(InetAddress.getLoopbackAddress))
+    }
+  }
+  if (errorCount > 0) {
+    System.err.println(s"DNS lookup errors: $errorCount")
+  }
+  val ipsResolvedUnique = dnsResolved.flatMap(_.ipv4).filterNot(_.isLoopbackAddress).distinct.map(_.toString.drop(1))
+  File("ips-resolved-unique.txt").write(ipsResolvedUnique.mkString("\n"))
+  actorSystem.terminate()
 
 }
