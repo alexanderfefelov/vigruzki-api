@@ -4,6 +4,8 @@
 
 Install vigruzki-api into the local repository:
 
+    git clone https://github.com/alexanderfefelov/vigruzki-api.git
+    cd vigruzki-api
     sbt publishLocal
 
 Then:
@@ -35,5 +37,10 @@ Or:
 
 Or:
 
+    cd /tmp
+    git clone https://github.com/alexanderfefelov/scala-ipv4.git
+    cd scala-ipv4
+    sbt publishLocal
+    cd --
     cd examples/extractData
     sbt "run /PATH/TO/YOUR/dump.xml"
