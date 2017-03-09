@@ -4,6 +4,7 @@ import akka.actor.{ActorRef, ActorSystem}
 import akka.io.{Dns, IO}
 import akka.pattern._
 import akka.util.Timeout
+import be.jvb.iptypes.IpNetwork
 import better.files.File
 import com.netaporter.uri._
 import com.netaporter.uri.config.UriConfig
@@ -31,6 +32,7 @@ object Main extends App {
   val domainMasksUnique = register.content.flatMap(_.domain).filter(_.contains("*")).distinct
   val ipsUnique = register.content.flatMap(_.ip).distinct
   val ipSubnetsUnique = register.content.flatMap(_.ipSubnet).distinct
+  val ipsFromIpSubnetsUnique = ipSubnetsUnique.map(new IpNetwork(_)).flatMap(_.addresses.toList).distinct
   implicit val uriConfig = UriConfig(decoder = NoopDecoder)
   val domainsFromUrlsUnique = urlsUnique.flatMap(Uri.parse(_).host).distinct
   val domainsUniqueTotal = (domainsUnique ++ domainsFromUrlsUnique).distinct
@@ -40,6 +42,7 @@ object Main extends App {
   File("domain-masks-unique.txt").write(domainMasksUnique.mkString("\n"))
   File("ips-unique.txt").write(ipsUnique.mkString("\n"))
   File("ip-subnets-unique.txt").write(ipSubnetsUnique.mkString("\n"))
+  File("ips-from-ip-subnets-unique.txt").write(ipsFromIpSubnetsUnique.mkString("\n"))
   File("domains-from-urls-unique.txt").write(domainsFromUrlsUnique.mkString("\n"))
   File("domains-unique-total.txt").write(domainsUniqueTotal.mkString("\n"))
 
@@ -70,7 +73,11 @@ object Main extends App {
     System.err.println(s"DNS lookup errors: $errorCount")
   }
   val ipsResolvedUnique = dnsResolved.flatMap(_.ipv4).filterNot(_.isLoopbackAddress).distinct.map(_.toString.drop(1))
+  val ipsUniqueTotal = (ipsUnique ++ ipsFromIpSubnetsUnique ++ ipsResolvedUnique).distinct
+
   File("ips-resolved-unique.txt").write(ipsResolvedUnique.mkString("\n"))
+  File("ips-unique-total.txt").write(ipsUniqueTotal.mkString("\n"))
+
   actorSystem.terminate()
 
 }
