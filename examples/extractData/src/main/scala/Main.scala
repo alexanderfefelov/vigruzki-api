@@ -27,15 +27,15 @@ object Main extends App {
   val rawXml = XML.loadFile(dumpXml)
   val register = scalaxb.fromXML[RegisterType](rawXml)
 
-  val urlsUnique = register.content.flatMap(_.url).distinct
-  val domainsUnique = register.content.flatMap(_.domain).filterNot(_.contains("*")).distinct
-  val domainMasksUnique = register.content.flatMap(_.domain).filter(_.contains("*")).distinct
-  val ipsUnique = register.content.flatMap(_.ip).distinct
-  val ipSubnetsUnique = register.content.flatMap(_.ipSubnet).distinct
-  val ipsFromIpSubnetsUnique = ipSubnetsUnique.map(new IpNetwork(_)).flatMap(_.addresses.toList).distinct
+  val urlsUnique = register.content.flatMap(_.url).sorted.distinct
+  val domainsUnique = register.content.flatMap(_.domain).filterNot(_.contains("*")).sorted.distinct
+  val domainMasksUnique = register.content.flatMap(_.domain).filter(_.contains("*")).sorted.distinct
+  val ipsUnique = register.content.flatMap(_.ip).sorted.distinct
+  val ipSubnetsUnique = register.content.flatMap(_.ipSubnet).sorted.distinct
+  val ipsFromIpSubnetsUnique = ipSubnetsUnique.map(new IpNetwork(_)).flatMap(_.addresses.toList).map(_.toString).distinct
   implicit val uriConfig = UriConfig(decoder = NoopDecoder)
-  val domainsFromUrlsUnique = urlsUnique.flatMap(Uri.parse(_).host).distinct
-  val domainsUniqueTotal = (domainsUnique ++ domainsFromUrlsUnique).distinct
+  val domainsFromUrlsUnique = urlsUnique.flatMap(Uri.parse(_).host).sorted.distinct
+  val domainsUniqueTotal = (domainsUnique ++ domainsFromUrlsUnique).sorted.distinct
 
   File("urls-unique.txt").write(urlsUnique.mkString("\n"))
   File("domains-unique.txt").write(domainsUnique.mkString("\n"))
@@ -72,8 +72,8 @@ object Main extends App {
   if (errorCount > 0) {
     System.err.println(s"DNS lookup errors: $errorCount")
   }
-  val ipsResolvedUnique = dnsResolved.flatMap(_.ipv4).filterNot(_.isLoopbackAddress).distinct.map(_.toString.drop(1))
-  val ipsUniqueTotal = (ipsUnique ++ ipsFromIpSubnetsUnique ++ ipsResolvedUnique).distinct
+  val ipsResolvedUnique = dnsResolved.flatMap(_.ipv4).filterNot(_.isLoopbackAddress).map(_.toString.drop(1)).toList.sorted.distinct
+  val ipsUniqueTotal = (ipsUnique ++ ipsFromIpSubnetsUnique ++ ipsResolvedUnique).sorted.distinct
 
   File("ips-resolved-unique.txt").write(ipsResolvedUnique.mkString("\n"))
   File("ips-unique-total.txt").write(ipsUniqueTotal.mkString("\n"))
