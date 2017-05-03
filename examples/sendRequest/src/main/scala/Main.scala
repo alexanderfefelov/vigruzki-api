@@ -19,6 +19,7 @@ import scalaxb.{Base64Binary, DispatchHttpClientsAsync, Soap11ClientsAsync}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Codec
+import scala.util.{Failure, Success}
 
 object Main extends App {
 
@@ -53,16 +54,13 @@ object Main extends App {
       val signatureBytes = signature.getBytes
 
       val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
-      val responseFuture = service.sendRequest(new Base64Binary(requestBytes.toVector), new Base64Binary(signatureBytes.toVector), Some(dumpFormatVersion))
-      responseFuture.onSuccess {
-        case response =>
+      service.sendRequest(new Base64Binary(requestBytes.toVector), new Base64Binary(signatureBytes.toVector), Some(dumpFormatVersion)).onComplete {
+        case Success(response) =>
           println(s"${new Date()}")
           println(s"    result: ${response.result}")
           println(s"    resultComment: ${response.resultComment.getOrElse("")}")
           println(s"    code: ${response.code.getOrElse("")}")
-      }
-      responseFuture.onFailure {
-        case error => println(error)
+        case Failure(error) => println(error)
       }
 
     case _ => println("Invalid PEM file")

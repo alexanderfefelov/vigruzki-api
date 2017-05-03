@@ -4,6 +4,7 @@ import better.files.File
 import ru.gov.rkn.vigruzki._
 
 import scalaxb.{DispatchHttpClientsAsync, Soap11ClientsAsync}
+import scala.util.{Failure, Success}
 
 object Main extends App {
 
@@ -12,9 +13,8 @@ object Main extends App {
   } else {
     val code = args(0)
     val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
-    val responseFuture = service.getResult(code)
-    responseFuture.onSuccess {
-      case response =>
+    service.getResult(code).onComplete {
+      case Success(response) =>
         println(s"${new Date()}")
         println(s"    result: ${response.result}")
         println(s"    resultCode: ${response.resultCode}")
@@ -29,9 +29,7 @@ object Main extends App {
           file.writeBytes(zip.iterator)
           println("done")
         }
-    }
-    responseFuture.onFailure {
-      case error => println(error)
+      case Failure(error) => println(error)
     }
   }
 
