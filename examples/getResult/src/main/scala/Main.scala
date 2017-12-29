@@ -1,7 +1,7 @@
 import java.util.Date
 
 import better.files.File
-import ru.gov.rkn.vigruzki._
+import com.github.alexanderfefelov.vigruzki.api._
 
 import scalaxb.{DispatchHttpClientsAsync, Soap11ClientsAsync}
 import scala.util.{Failure, Success}

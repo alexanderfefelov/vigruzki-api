@@ -9,7 +9,7 @@ import better.files.File
 import com.netaporter.uri._
 import com.netaporter.uri.config.UriConfig
 import com.netaporter.uri.decoding.NoopDecoder
-import ru.gov.rkn.vigruzki._
+import com.github.alexanderfefelov.vigruzki.api._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

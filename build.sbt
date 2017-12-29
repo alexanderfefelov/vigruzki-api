@@ -1,5 +1,5 @@
 name := "vigruzki-api"
-organization := "alexanderfefelov.github.com"
+organization := "com.github.alexanderfefelov"
 
 scalaVersion := "2.11.8"
 
@@ -9,7 +9,7 @@ libraryDependencies ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
 )
 
-scalaxbPackageName in(Compile, scalaxb) := "ru.gov.rkn.vigruzki"
+scalaxbPackageName in(Compile, scalaxb) := "com.github.alexanderfefelov.vigruzki.api"
 
 lazy val root = (project in file("."))
   .enablePlugins(ScalaxbPlugin)

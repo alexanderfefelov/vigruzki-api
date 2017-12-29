@@ -1,6 +1,6 @@
 import java.util.Date
 
-import ru.gov.rkn.vigruzki._
+import com.github.alexanderfefelov.vigruzki.api._
 
 import scalaxb._
 import scala.util.{Failure, Success}
