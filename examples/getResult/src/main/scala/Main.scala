@@ -28,8 +28,11 @@ object Main extends App {
           val file = File(filename)
           file.writeBytes(zip.iterator)
           println("done")
+          println("Finished. Press Ctrl+C")
         }
-      case Failure(error) => println(error)
+      case Failure(error) =>
+        println(error)
+        println("Finished. Press Ctrl+C")
     }
   }
 

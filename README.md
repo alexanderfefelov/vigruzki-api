@@ -32,7 +32,7 @@ Or:
 
 Or:
 
-    cd examples/basicXmlStat
+    cd examples/basicStat
     sbt "run /PATH/TO/YOUR/dump.xml"
 
 Or:

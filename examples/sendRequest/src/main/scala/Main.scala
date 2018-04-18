@@ -59,7 +59,9 @@ object Main extends App {
           println(s"    result: ${response.result}")
           println(s"    resultComment: ${response.resultComment.getOrElse("")}")
           println(s"    code: ${response.code.getOrElse("")}")
+          println("Finished. Press Ctrl+C")
         case Failure(error) => println(error)
+          println("Finished. Press Ctrl+C")
       }
 
     case _ => println("Invalid PEM file")

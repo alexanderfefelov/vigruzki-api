@@ -28,7 +28,9 @@ object Main extends App {
   val domainsFromUrlsUnique = urlsUnique.flatMap(Uri.parse(_).host).distinct
   val domainsUniqueTotal = (domainsUnique ++ domainsFromUrlsUnique).distinct
 
-  println("Content records: " + register.content.size)
+  println(s"Update time: ${register.updateTime}")
+  println(s"Update time urgently: ${register.updateTimeUrgently}")
+  println(s"Content records: ${register.content.size}")
   println(s"URLs/unique: ${register.content.map(_.url.size).sum}/${urlsUnique.size}")
   println(s"Schemes unique: ${prettyPrint(schemesUnique)}")
   println(s"Ports unique: ${prettyPrint(portsUnique)}")
