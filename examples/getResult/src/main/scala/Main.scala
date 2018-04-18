@@ -22,13 +22,16 @@ object Main extends App {
         println(s"    dumpFormatVersion: ${response.dumpFormatVersion.getOrElse("")}")
         println(s"    operatorName: ${response.operatorName.getOrElse("")}")
         println(s"    inn: ${response.inn.getOrElse("")}")
-        response.registerZipArchive map { zip =>
-          val filename = "register.zip"
-          print(s"    registerZipArchive: $filename...")
-          val file = File(filename)
-          file.writeBytes(zip.iterator)
-          println("done")
-          println("Finished. Press Ctrl+C")
+        response.registerZipArchive match {
+          case Some(zip) =>
+            val filename = "register.zip"
+            print(s"    registerZipArchive: $filename...")
+            val file = File(filename)
+            file.writeBytes(zip.iterator)
+            println("done")
+            println("Finished. Press Ctrl+C")
+          case _ =>
+            println("Finished. Press Ctrl+C")
         }
       case Failure(error) =>
         println(error)
