@@ -44,3 +44,4 @@ Or:
     cd --
     cd examples/extractData
     sbt "run /PATH/TO/YOUR/dump.xml"
+    python ip-subnets-unique-whois.py
