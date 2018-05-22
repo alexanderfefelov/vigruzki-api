@@ -17,21 +17,27 @@ import scala.xml._
 
 object Main extends App {
 
-  if (args.length != 1) {
+  if (args.length < 1) {
     println("You must specify the path to dump.xml as a command-line argument")
     System.exit(1)
   }
 
   val dumpXml = args(0)
+  val decisionNumberFilter = args(1)
 
   val rawXml = XML.loadFile(dumpXml)
   val register = scalaxb.fromXML[RegisterType](rawXml)
+  val content = if (decisionNumberFilter == null) {
+    register.content
+  } else {
+    register.content.filter(x => x.decision.number == decisionNumberFilter)
+  }
 
-  val urlsUnique = register.content.flatMap(_.url).sorted.distinct
-  val domainsUnique = register.content.flatMap(_.domain).filterNot(_.contains("*")).sorted.distinct
-  val domainMasksUnique = register.content.flatMap(_.domain).filter(_.contains("*")).sorted.distinct
-  val ipsUnique = register.content.flatMap(_.ip).sorted.distinct
-  val ipSubnetsUnique = register.content.flatMap(_.ipSubnet).sorted.distinct
+  val urlsUnique = content.flatMap(_.url).map(_.value).sorted.distinct
+  val domainsUnique = content.flatMap(_.domain).filterNot(_.value.contains("*")).map(_.value).sorted.distinct
+  val domainMasksUnique = content.flatMap(_.domain).filter(_.value.contains("*")).map(_.value).sorted.distinct
+  val ipsUnique = content.flatMap(_.ip).map(_.value).sorted.distinct
+  val ipSubnetsUnique = content.flatMap(_.ipSubnet).map(_.value).sorted.distinct
   val ipsFromIpSubnetsUnique = ipSubnetsUnique.map(new IpNetwork(_)).flatMap(_.addresses.toList).map(_.toString).distinct
   implicit val uriConfig = UriConfig(decoder = NoopDecoder)
   val domainsFromUrlsUnique = urlsUnique.flatMap(Uri.parse(_).host).sorted.distinct

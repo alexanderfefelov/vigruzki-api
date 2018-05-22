@@ -34,25 +34,53 @@
                     <xsd:documentation>–ешение уполномоченного органа</xsd:documentation>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="url" minOccurs="0" maxOccurs="unbounded" type="xsd:string">
+            <xsd:element name="url" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:documentation>”казатель страницы сайта</xsd:documentation>
                 </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="ts" type="xsd:dateTime"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
             </xsd:element>
-            <xsd:element name="domain" minOccurs="0" maxOccurs="unbounded" type="xsd:string">
+            <xsd:element name="domain" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:documentation>ƒоменное им€</xsd:documentation>
                 </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="ts" type="xsd:dateTime"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
             </xsd:element>
-            <xsd:element name="ip" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="ip" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:documentation>—етевой адрес</xsd:documentation>
                 </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="ts" type="xsd:dateTime"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
             </xsd:element>
-            <xsd:element name="ipSubnet" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="ipSubnet" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:documentation>IP-подсеть</xsd:documentation>
                 </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="ts" type="xsd:dateTime"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
             </xsd:element>
         </xsd:sequence>
         <xsd:attribute name="id" type="xsd:string" use="required">
@@ -78,6 +106,13 @@
         <xsd:attribute name="blockType" type="xsd:string">
             <xsd:annotation>
                 <xsd:documentation>код типа блокировки реестровой записи</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="ts" type="xsd:dateTime">
+            <xsd:annotation>
+                <xsd:documentation>метка времени (timestamp, дата/врем€) с указанием момента, когда
+                    произошли последние изменени€ данного объекта
+                </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="hash" type="xsd:string">
