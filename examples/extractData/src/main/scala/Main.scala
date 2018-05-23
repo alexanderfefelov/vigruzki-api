@@ -23,14 +23,13 @@ object Main extends App {
   }
 
   val dumpXml = args(0)
-  val decisionNumberFilter = args(1)
 
   val rawXml = XML.loadFile(dumpXml)
   val register = scalaxb.fromXML[RegisterType](rawXml)
-  val content = if (decisionNumberFilter == null) {
-    register.content
+  val content = if (args.length == 2) {
+    register.content.filter(x => x.decision.number == args(1))
   } else {
-    register.content.filter(x => x.decision.number == decisionNumberFilter)
+    register.content
   }
 
   val urlsUnique = content.flatMap(_.url).map(_.value).sorted.distinct
