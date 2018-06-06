@@ -17,7 +17,13 @@ def main():
             total_hosts = 0
             for line in lines:
                 src = line.strip()
-                print src
+                if not src:
+                    out_file.write(u"\n")
+                    continue
+                if src.startswith("#"):
+                    out_file.write(u"{0}\n".format(src))
+                    continue
+                print(src)
                 (network_address, mask) = src.split("/")
                 whois = IPWhois(network_address)
                 whois_data = whois.lookup_rdap(depth = 1)

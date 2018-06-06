@@ -32,6 +32,16 @@ object Main extends App {
     register.content
   }
 
+  val header =
+    s"""
+      |#------------------------------------------------------------
+      |# Register update time: ${register.updateTime}
+      |# Register update time urgently: ${register.updateTimeUrgently.getOrElse("-")}
+      |# Register content records: ${content.size}
+      |#------------------------------------------------------------
+      |
+      |""".stripMargin
+
   val urlsUnique = content.flatMap(_.url).map(_.value).sorted.distinct
   val domainsUnique = content.flatMap(_.domain).filterNot(_.value.contains("*")).map(_.value).sorted.distinct
   val domainMasksUnique = content.flatMap(_.domain).filter(_.value.contains("*")).map(_.value).sorted.distinct
@@ -41,15 +51,6 @@ object Main extends App {
   implicit val uriConfig = UriConfig(decoder = NoopDecoder)
   val domainsFromUrlsUnique = urlsUnique.flatMap(Uri.parse(_).host).sorted.distinct
   val domainsUniqueTotal = (domainsUnique ++ domainsFromUrlsUnique).sorted.distinct
-
-  File("urls-unique.txt").write(urlsUnique.mkString("\n"))
-  File("domains-unique.txt").write(domainsUnique.mkString("\n"))
-  File("domain-masks-unique.txt").write(domainMasksUnique.mkString("\n"))
-  File("ips-unique.txt").write(ipsUnique.mkString("\n"))
-  File("ip-subnets-unique.txt").write(ipSubnetsUnique.mkString("\n"))
-  File("ips-from-ip-subnets-unique.txt").write(ipsFromIpSubnetsUnique.mkString("\n"))
-  File("domains-from-urls-unique.txt").write(domainsFromUrlsUnique.mkString("\n"))
-  File("domains-unique-total.txt").write(domainsUniqueTotal.mkString("\n"))
 
   implicit val actorSystem = ActorSystem()
   def askWithRetry(actorRef: ActorRef, message: Any, timeout: Timeout, maxAttempts: Int, delay: Duration, attempt: Int = 0): Any = {
@@ -80,9 +81,16 @@ object Main extends App {
   val ipsResolvedUnique = dnsResolved.flatMap(_.ipv4).filterNot(_.isLoopbackAddress).map(_.toString.drop(1)).toList.sorted.distinct
   val ipsUniqueTotal = (ipsUnique ++ ipsFromIpSubnetsUnique ++ ipsResolvedUnique).sorted.distinct
 
-  File("ips-resolved-unique.txt").write(ipsResolvedUnique.mkString("\n"))
-  File("ips-unique-total.txt").write(ipsUniqueTotal.mkString("\n"))
+  File("urls-unique.txt") < header << urlsUnique.mkString("\n")
+  File("domains-unique.txt") < header << domainsUnique.mkString("\n")
+  File("domain-masks-unique.txt") < header << domainMasksUnique.mkString("\n")
+  File("ips-unique.txt") < header << ipsUnique.mkString("\n")
+  File("ip-subnets-unique.txt") < header << ipSubnetsUnique.mkString("\n")
+  File("ips-from-ip-subnets-unique.txt") < header << ipsFromIpSubnetsUnique.mkString("\n")
+  File("domains-from-urls-unique.txt") < header << domainsFromUrlsUnique.mkString("\n")
+  File("domains-unique-total.txt") < header << domainsUniqueTotal.mkString("\n")
+  File("ips-resolved-unique.txt") < header << ipsResolvedUnique.mkString("\n")
+  File("ips-unique-total.txt") < header << ipsUniqueTotal.mkString("\n")
 
   actorSystem.terminate()
-
 }

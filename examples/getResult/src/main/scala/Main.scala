@@ -2,19 +2,26 @@ import java.util.Date
 
 import better.files.File
 import com.github.alexanderfefelov.vigruzki.api._
-
 import scalaxb.{DispatchHttpClientsAsync, Soap11ClientsAsync}
-import scala.util.{Failure, Success}
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.util.control.Breaks._
 
 object Main extends App {
+
+  val ATTEMPTS = 5
+  val DELAY_BETWEEN_ATTEMPTS = 45 * 1000
 
   if (args.length != 1) {
     println("You must specify a request code as a command-line argument")
   } else {
     val code = args(0)
     val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
-    service.getResult(code).onComplete {
-      case Success(response) =>
+    breakable {
+      for (i <- 1 to ATTEMPTS) {
+        println(s"Attempt #$i")
+        val response = Await.result(service.getResult(code), 10.seconds)
         println(s"${new Date()}")
         println(s"    result: ${response.result}")
         println(s"    resultCode: ${response.resultCode}")
@@ -29,14 +36,16 @@ object Main extends App {
             val file = File(filename)
             file.writeBytes(zip.iterator)
             println("done")
-            println("Finished. Press Ctrl+C")
+            break()
           case _ =>
-            println("Finished. Press Ctrl+C")
         }
-      case Failure(error) =>
-        println(error)
-        println("Finished. Press Ctrl+C")
+
+        println("Wait a bit...")
+        Thread.sleep(DELAY_BETWEEN_ATTEMPTS)
+        println("done")
+      }
     }
+    println("Finished. Press Ctrl+C")
   }
 
 }
