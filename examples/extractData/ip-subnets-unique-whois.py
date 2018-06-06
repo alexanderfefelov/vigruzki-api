@@ -28,9 +28,11 @@ def main():
                 whois = IPWhois(network_address)
                 whois_data = whois.lookup_rdap(depth = 1)
                 network_name = whois_data["network"]["name"]
+                asn = whois_data["asn"]
+                asn_description = whois_data["asn_description"]
                 hosts = ipaddr.IPv4Network(src).numhosts
                 total_hosts += hosts
-                out_file.write(u"# {0}\n# {1} host(s)\n{2}\n\n".format(network_name, hosts, src))
+                out_file.write(u"# {0}\n# AS{1} {2}\n# {3} host(s)\n{4}\n\n".format(network_name, asn, asn_description, hosts, src))
             out_file.write(u"# {0} host(s)\n".format(total_hosts))
 
 
