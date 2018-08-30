@@ -12,6 +12,7 @@ object Main extends App {
 
   val ATTEMPTS = 5
   val DELAY_BETWEEN_ATTEMPTS = 45 * 1000
+  val AWAIT_AT_MOST = 10.seconds
 
   if (args.length != 1) {
     println("You must specify a request code as a command-line argument")
@@ -21,7 +22,7 @@ object Main extends App {
     breakable {
       for (i <- 1 to ATTEMPTS) {
         println(s"Attempt #$i")
-        val response = Await.result(service.getResult(code), 10.seconds)
+        val response = Await.result(service.getResult(code), AWAIT_AT_MOST)
         println(s"${new Date()}")
         println(s"    result: ${response.result}")
         println(s"    resultCode: ${response.resultCode}")
@@ -40,9 +41,11 @@ object Main extends App {
           case _ =>
         }
 
-        println("Wait a bit...")
-        Thread.sleep(DELAY_BETWEEN_ATTEMPTS)
-        println("done")
+        if (i < ATTEMPTS) {
+          println("Wait a bit...")
+          Thread.sleep(DELAY_BETWEEN_ATTEMPTS)
+          println("done")
+        }
       }
     }
     println("Finished. Press Ctrl+C")

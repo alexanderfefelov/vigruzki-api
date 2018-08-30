@@ -38,6 +38,7 @@ object Main extends App {
       |# Register update time: ${register.updateTime}
       |# Register update time urgently: ${register.updateTimeUrgently.getOrElse("-")}
       |# Register content records: ${content.size}
+      |#${if (args.length == 2) s" Filter: ${args(1)}"}
       |#------------------------------------------------------------
       |
       |""".stripMargin
