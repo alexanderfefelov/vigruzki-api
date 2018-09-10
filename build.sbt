@@ -1,17 +1,22 @@
 name := "vigruzki-api"
 organization := "com.github.alexanderfefelov"
 
-scalaVersion := "2.11.8"
+crossScalaVersions := Seq("2.11.12", "2.12.6")
+
+lazy val dispatchV = "0.14.0"
 
 libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
-  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3",
-  "net.databinder.dispatch" %% "dispatch-core" % "0.11.3"
+  "org.scala-lang.modules" %% "scala-xml" % "1.1.0",
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1",
+  "org.dispatchhttp" %% "dispatch-core" % dispatchV
 )
 
 scalaxbPackageName in(Compile, scalaxb) := "com.github.alexanderfefelov.vigruzki.api"
 
 lazy val root = (project in file("."))
   .enablePlugins(ScalaxbPlugin)
+  .settings(
+    scalaxbDispatchVersion in (Compile, scalaxb) := dispatchV
+  )
 
 doc in Compile := target.map(_ / "none").value
