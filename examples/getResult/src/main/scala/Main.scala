@@ -2,7 +2,7 @@ import java.util.Date
 
 import better.files.File
 import com.github.alexanderfefelov.vigruzki.api._
-import scalaxb.{DispatchHttpClientsAsync, Soap11ClientsAsync}
+import scalaxb.{DispatchHttpClientsWithRedirectAsync, Soap11ClientsAsync}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -21,7 +21,7 @@ object Main extends App {
   }
 
   val code = args(0)
-  val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
+  val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsWithRedirectAsync).service
   breakable {
     for (i <- 1 to ATTEMPTS) {
       println(s"Attempt #$i")

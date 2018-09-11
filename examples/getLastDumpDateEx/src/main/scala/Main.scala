@@ -8,7 +8,7 @@ import scala.util.{Failure, Success}
 
 object Main extends App {
 
-  val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
+  val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsWithRedirectAsync).service
   while (true) {
     service.getLastDumpDateEx().onComplete {
       case Success(response) =>

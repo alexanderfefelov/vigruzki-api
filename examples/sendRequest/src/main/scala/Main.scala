@@ -15,7 +15,7 @@ import org.bouncycastle.operator.jcajce.{JcaContentSignerBuilder, JcaDigestCalcu
 import org.joda.time.{DateTime, Days}
 import com.github.alexanderfefelov.vigruzki.api._
 
-import scalaxb.{Base64Binary, DispatchHttpClientsAsync, Soap11ClientsAsync}
+import scalaxb.{Base64Binary, DispatchHttpClientsWithRedirectAsync, Soap11ClientsAsync}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Codec
@@ -53,7 +53,7 @@ object Main extends App {
       File("request.txt.sig").write(signature)
       val signatureBytes = signature.getBytes
 
-      val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsAsync).service
+      val service = (new OperatorRequestPortBindings with Soap11ClientsAsync with DispatchHttpClientsWithRedirectAsync).service
       service.sendRequest(new Base64Binary(requestBytes.toVector), new Base64Binary(signatureBytes.toVector), Some(dumpFormatVersion)).onComplete {
         case Success(response) =>
           println(s"${new Date()}")
