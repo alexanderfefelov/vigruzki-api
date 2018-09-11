@@ -5,11 +5,12 @@ import akka.io.{Dns, IO}
 import akka.pattern._
 import akka.util.Timeout
 import be.jvb.iptypes.IpNetwork
+import better.files.Dsl.SymbolicOperations
 import better.files.File
+import com.github.alexanderfefelov.vigruzki.api._
 import com.netaporter.uri._
 import com.netaporter.uri.config.UriConfig
 import com.netaporter.uri.decoding.NoopDecoder
-import com.github.alexanderfefelov.vigruzki.api._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -17,7 +18,7 @@ import scala.xml._
 
 object Main extends App {
 
-  if (args.length < 1) {
+  if (args.length != 1) {
     println("You must specify the path to dump.xml as a command-line argument")
     System.exit(1)
   }

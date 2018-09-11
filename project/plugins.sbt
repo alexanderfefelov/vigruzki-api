@@ -1,3 +1,3 @@
 resolvers += Resolver.sonatypeRepo("public")
 
-addSbtPlugin("org.scalaxb" % "sbt-scalaxb" % "local-SNAPSHOT")
+addSbtPlugin("org.scalaxb" % "sbt-scalaxb" % "1.7.0")

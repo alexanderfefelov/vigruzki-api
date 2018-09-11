@@ -3,6 +3,7 @@ import java.util.Date
 import com.github.alexanderfefelov.vigruzki.api._
 
 import scalaxb._
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 object Main extends App {

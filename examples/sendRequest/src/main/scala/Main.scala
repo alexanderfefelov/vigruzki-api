@@ -17,6 +17,7 @@ import com.github.alexanderfefelov.vigruzki.api._
 
 import scalaxb.{Base64Binary, DispatchHttpClientsAsync, Soap11ClientsAsync}
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Codec
 import scala.util.{Failure, Success}
 
