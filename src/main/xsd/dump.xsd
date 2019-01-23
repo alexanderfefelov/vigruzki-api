@@ -60,7 +60,19 @@
             </xsd:element>
             <xsd:element name="ip" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:documentation>Сетевой адрес</xsd:documentation>
+                    <xsd:documentation>Сетевой адрес IPv4</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="ts" type="xsd:dateTime"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ipv6" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>Сетевой адрес IPv6</xsd:documentation>
                 </xsd:annotation>
                 <xsd:complexType>
                     <xsd:simpleContent>
@@ -72,7 +84,19 @@
             </xsd:element>
             <xsd:element name="ipSubnet" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:documentation>IP-подсеть</xsd:documentation>
+                    <xsd:documentation>IP-подсеть IPv4</xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="ts" type="xsd:dateTime"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ipv6Subnet" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>IP-подсеть IPv6</xsd:documentation>
                 </xsd:annotation>
                 <xsd:complexType>
                     <xsd:simpleContent>
