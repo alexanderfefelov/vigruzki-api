@@ -1,7 +1,7 @@
 name := "vigruzki-api"
 organization := "com.github.alexanderfefelov"
 
-crossScalaVersions := Seq("2.11.12", "2.12.6")
+crossScalaVersions := Seq("2.11.12", "2.12.8")
 
 lazy val dispatchV = "0.14.0"
 
